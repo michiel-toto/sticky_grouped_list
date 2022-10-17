@@ -63,6 +63,9 @@ class StickyGroupedListView<T, E> extends StatefulWidget {
   /// Whether the group headers float over the list or occupy their own space.
   final bool floatingHeader;
 
+  /// Whether to use stickyheaders, defaults to true
+  final bool useStickyHeaders;
+
   /// Background color of the sticky header.
   /// Only used if [floatingHeader] is false.
   final Color stickyHeaderBackgroundColor;
@@ -138,35 +141,36 @@ class StickyGroupedListView<T, E> extends StatefulWidget {
   final double initialAlignment;
 
   /// Creates a [StickyGroupedListView].
-  const StickyGroupedListView({
-    super.key,
-    required this.elements,
-    required this.groupBy,
-    required this.groupSeparatorBuilder,
-    this.groupComparator,
-    this.itemBuilder,
-    this.indexedItemBuilder,
-    this.itemComparator,
-    this.elementIdentifier,
-    this.order = StickyGroupedListOrder.ASC,
-    this.separator = const SizedBox.shrink(),
-    this.floatingHeader = false,
-    this.stickyHeaderBackgroundColor = const Color(0xffF7F7F7),
-    this.scrollDirection = Axis.vertical,
-    this.itemScrollController,
-    this.itemPositionsListener,
-    this.physics,
-    this.padding,
-    this.reverse = false,
-    this.addAutomaticKeepAlives = true,
-    this.addRepaintBoundaries = true,
-    this.addSemanticIndexes = true,
-    this.minCacheExtent,
-    this.semanticChildCount,
-    this.initialAlignment = 0,
-    this.initialScrollIndex = 0,
-    this.shrinkWrap = false,
-  }) : assert(itemBuilder != null || indexedItemBuilder != null);
+  const StickyGroupedListView(
+      {super.key,
+      required this.elements,
+      required this.groupBy,
+      required this.groupSeparatorBuilder,
+      this.groupComparator,
+      this.itemBuilder,
+      this.indexedItemBuilder,
+      this.itemComparator,
+      this.elementIdentifier,
+      this.order = StickyGroupedListOrder.ASC,
+      this.separator = const SizedBox.shrink(),
+      this.floatingHeader = false,
+      this.stickyHeaderBackgroundColor = const Color(0xffF7F7F7),
+      this.scrollDirection = Axis.vertical,
+      this.itemScrollController,
+      this.itemPositionsListener,
+      this.physics,
+      this.padding,
+      this.reverse = false,
+      this.addAutomaticKeepAlives = true,
+      this.addRepaintBoundaries = true,
+      this.addSemanticIndexes = true,
+      this.minCacheExtent,
+      this.semanticChildCount,
+      this.initialAlignment = 0,
+      this.initialScrollIndex = 0,
+      this.shrinkWrap = false,
+      this.useStickyHeaders = true})
+      : assert(itemBuilder != null || indexedItemBuilder != null);
 
   @override
   State<StatefulWidget> createState() => StickyGroupedListViewState<T, E>();
@@ -281,7 +285,8 @@ class StickyGroupedListViewState<T, E>
         StreamBuilder<int>(
           stream: _streamController.stream,
           initialData: _topElementIndex,
-          builder: (_, snapshot) => _showFixedGroupHeader(snapshot.data!),
+          builder: (_, snapshot) =>
+              _showFixedGroupHeader(snapshot.data!, widget.useStickyHeaders),
         )
       ],
     );
@@ -356,8 +361,8 @@ class StickyGroupedListViewState<T, E>
     return elements;
   }
 
-  Widget _showFixedGroupHeader(int index) {
-    if (widget.elements.isNotEmpty) {
+  Widget _showFixedGroupHeader(int index, bool useStickyHeaders) {
+    if (widget.elements.isNotEmpty && useStickyHeaders) {
       _groupHeaderKey = GlobalKey();
       return Container(
         key: _groupHeaderKey,
