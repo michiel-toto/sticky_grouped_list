@@ -429,7 +429,8 @@ class GroupedItemScrollController extends ItemScrollController {
     List<double> opacityAnimationWeights = const [40, 20, 40],
   }) {
     if (automaticAlignment) {
-      alignment = _stickyGroupedListViewState!.headerDimension ?? alignment;
+      alignment =
+          alignment + (_stickyGroupedListViewState!.headerDimension ?? 0);
     }
     return super.scrollTo(
       index: index * 2 + 1,
