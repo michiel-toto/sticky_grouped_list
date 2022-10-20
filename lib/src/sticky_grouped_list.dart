@@ -409,7 +409,7 @@ class GroupedItemScrollController extends ItemScrollController {
     bool automaticAlignment = true,
   }) {
     if (automaticAlignment) {
-      alignment = _stickyGroupedListViewState!.headerDimension ?? alignment;
+      alignment = _stickyGroupedListViewState?.headerDimension ?? alignment;
     }
     return super.jumpTo(index: index * 2 + 1, alignment: alignment);
   }
@@ -429,7 +429,7 @@ class GroupedItemScrollController extends ItemScrollController {
     List<double> opacityAnimationWeights = const [40, 20, 40],
   }) {
     if (automaticAlignment) {
-      alignment = _stickyGroupedListViewState!.headerDimension ?? alignment;
+      alignment = _stickyGroupedListViewState?.headerDimension ?? alignment;
     }
     return super.scrollTo(
       index: index * 2 + 1,
